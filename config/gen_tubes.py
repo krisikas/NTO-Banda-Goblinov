@@ -5,18 +5,31 @@ import math
 main_tube = 'model://main_tube'
 tube = 'model://tube'
 
-poss = [[f"{1+i*0.5} 4", ["1.57", "-1.57"]] for i in range(1, 9)] + [[f"{round(5+ i*0.5*math.cos(30*math.pi/180), 2)} {round(4-i*0.5*math.sin(30*math.pi/180), 2)}", ["1.05", "-2.09"]] for i in range(1, 9)]
+poss = [random.randint(0,16)/100 +1]
+#[f"{1+i*0.5} 4", ["1.57", "-1.57"]] for i in range(1, 9)] + [[f"{round(5+ i*0.5*math.cos(30*math.pi/180), 2)} {round(4-i*0.5*math.sin(30*math.pi/180), 2)}", ["1.05", "-2.09"]] for i in range(1, 9)]
 
 randPos = []   # Список для хранения случайно выбранных позиций зданий
 randTurn = [] # Список для хранения случайно выбранных цветов зданий
 
+randPos.append(f"{poss[0]} 4")
+randTurn.append(1.57)
+print(0, randPos[len(randPos)-1], randTurn[len(randTurn)-1])
+
+
+
 # Цикл для выбора случайных позиций и цветов для пяти зданий
-for i in range(5):
-    p = poss[random.randrange(len(poss))] # Выбор случайной позиции из списка
-    poss.remove(p)                        # Удаление выбранной позиции из списка возможных
-    randTurn.append(p[1][random.randrange(2)]) # Выбор случайного цвета и сохранения в список
-    randPos.append(p[0])     # Форматирование позиции в строку и сохрание в список
-    print(i, randPos[len(randPos)-1], randTurn[len(randTurn)-1])
+for i in range(4):
+    p = random.randint(int((poss[i]+0.75)*100), (i+2)*160 +1)/100 # Выбор случайной позиции из списка
+    if p<5:
+      poss.append(p)                        # Удаление выбранной позиции из списка возможных
+      randPos.append(f"{p} 4")     # Форматирование позиции в строку и сохрание в список
+      randTurn.append(1.57) # Выбор случайного цвета и сохранения в список
+    else:
+      pp = (p - 5) / math.cos(30*math.pi/180)
+      poss.append(pp+5)
+      randPos.append(f"{p} {4-pp*math.sin(30*math.pi/180)}")
+      randTurn.append(1.57 -30*math.pi/180) # Выбор случайного цвета и сохранения в список
+    print(i +1, randPos[len(randPos)-1], randTurn[len(randTurn)-1])
 
 # Открытие файла для записи настроек мира
 world = open('/home/clover/catkin_ws/src/clover/clover_simulation/resources/worlds/clover_aruco.world', 'w')
