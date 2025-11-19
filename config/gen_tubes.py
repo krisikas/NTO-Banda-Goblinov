@@ -23,12 +23,19 @@ for i in range(4):
     if p<5:
       poss.append(p)                        # Удаление выбранной позиции из списка возможных
       randPos.append(f"{p} 4")     # Форматирование позиции в строку и сохрание в список
-      randTurn.append(1.57) # Выбор случайного цвета и сохранения в список
+      if random.randint(0,1):
+        randTurn.append(90*math.pi/180) # Выбор случайного цвета и сохранения в список
+      else:
+         randTurn.append(270*math.pi/180) # Выбор случайного цвета и сохранения в список
     else:
       pp = (p - 5) / math.cos(30*math.pi/180)
       poss.append(pp+5)
       randPos.append(f"{p} {4-pp*math.sin(30*math.pi/180)}")
-      randTurn.append(1.57 -30*math.pi/180) # Выбор случайного цвета и сохранения в список
+      if random.randint(0,1):
+        randTurn.append(90*math.pi/180 -30*math.pi/180) # Выбор случайного цвета и сохранения в список
+      else:
+        randTurn.append(270*math.pi/180 -30*math.pi/180) # Выбор случайного цвета и сохранения в список
+      
     print(i +1, randPos[len(randPos)-1], randTurn[len(randTurn)-1])
 
 # Открытие файла для записи настроек мира
