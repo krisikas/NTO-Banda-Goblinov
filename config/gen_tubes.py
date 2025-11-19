@@ -18,8 +18,10 @@ print(0, randPos[len(randPos)-1], randTurn[len(randTurn)-1])
 
 
 # Цикл для выбора случайных позиций и цветов для пяти зданий
-for i in range(4):
-    p = random.randint(int((poss[i]+0.75)*100), (i+2)*160 +1)/100 # Выбор случайной позиции из списка
+pold = 0
+i = 4
+while(i):
+    p = random.randint(int((poss[4-i]+0.75)*100), ((4-i)+2)*160 +1)/100 # Выбор случайной позиции из списка
     if p<5:
       poss.append(p)                        # Удаление выбранной позиции из списка возможных
       randPos.append(f"{p} 4")     # Форматирование позиции в строку и сохрание в список
@@ -27,16 +29,22 @@ for i in range(4):
         randTurn.append(90*math.pi/180) # Выбор случайного цвета и сохранения в список
       else:
          randTurn.append(270*math.pi/180) # Выбор случайного цвета и сохранения в список
+      pold = p
+      i = i-1
+      print(i +1, randPos[len(randPos)-1], randTurn[len(randTurn)-1])
     else:
       pp = (p - 5) / math.cos(30*math.pi/180)
-      poss.append(pp+5)
-      randPos.append(f"{p} {4-pp*math.sin(30*math.pi/180)}")
-      if random.randint(0,1):
-        randTurn.append(90*math.pi/180 -30*math.pi/180) # Выбор случайного цвета и сохранения в список
-      else:
-        randTurn.append(270*math.pi/180 -30*math.pi/180) # Выбор случайного цвета и сохранения в список
-      
-    print(i +1, randPos[len(randPos)-1], randTurn[len(randTurn)-1])
+      if (pold < 5 and (((pp+5 - pold)**2 + (pp*math.sin(30*math.pi/180))**2)**0.5 > 0.75)) or pold > 5:
+        poss.append(pp+5)
+        randPos.append(f"{pp+5} {4-pp*math.sin(30*math.pi/180)-0.15}")
+        if random.randint(0,1):
+          randTurn.append(90*math.pi/180 -30*math.pi/180) # Выбор случайного цвета и сохранения в список
+        else:
+          randTurn.append(270*math.pi/180 -30*math.pi/180) # Выбор случайного цвета и сохранения в список
+        pold = pp
+        i = i-1
+        print(i +1, randPos[len(randPos)-1], randTurn[len(randTurn)-1])
+    
 
 # Открытие файла для записи настроек мира
 world = open('/home/clover/catkin_ws/src/clover/clover_simulation/resources/worlds/clover_aruco.world', 'w')
