@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <button onclick="start()">start</button>
+    <button onclick="stop()">stop</button>
+    <button onclick="kill()">killswitch</button>
+
+    <script src="{{ url_for('static', filename='socket.io.js') }}"></script>
+    <script>
+    const socket = io();
+    socket.on("connect", () => {
+        console.log("Connected to Socket.IO server");
+    });
+
+    socket.on("message", (data) => {
+        console.log("Received message:", data);
+    });
+
+    socket.emit("sendMessage", "Hello from the client!");
+    </script>
+    <script>
+        const start = () => {
+            console.log("start")
+            fetch("/api/start")
+        }
+        const stop = () => {
+            console.log("stop")
+            fetch("/api/stop")
+        }
+        const kill = () => {
+            console.log("kill")
+            fetch("/api/kill")
+        }
+    </script>
+</body>
+</html>
