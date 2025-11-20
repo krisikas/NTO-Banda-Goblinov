@@ -1,4 +1,6 @@
 import xml.etree.ElementTree as ET  # Модуль для обработки XML данных
+import shutil  # Импортируем модуль для работы с файлами и директориями
+
 
 # Пути к рабочим файлам конфигурации
 simulationModels = '/home/clover/catkin_ws/src/clover/clover_simulation/models/'
@@ -7,6 +9,9 @@ droneLaunch = '/home/clover/catkin_ws/src/clover/clover/launch/clover.launch'
 environmentFile = '/home/clover/catkin_ws/src/clover/clover_simulation/resources/worlds/clover_aruco.world'
 markerData = '/home/clover/catkin_ws/src/clover/aruco_pose/map/'
 
+
+shutil.copytree('./models/main_tube', simulationModels + 'main_tube')
+shutil.copytree('./models/tube', simulationModels + 'tube')
 
 
 
@@ -24,7 +29,6 @@ try:
     
     # Извлечение параметра размера из файла карты
     markerSize = mapFile.read().split('\n')[1].split('\t')[1]
-    
 except:
     # Сообщение об отсутствии карты маркеров
     print('Карта маркеров не обнаружена! Запустите genmap.py, подробности: https://clover.coex.tech/en/aruco_map.html#marker-map-definition')
