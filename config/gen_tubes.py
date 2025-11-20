@@ -1,22 +1,48 @@
 import random  # Импортируем модуль random для генерации случайных чисел
 import math
 
-# Список доступных цветов для зданий
+
 main_tube = 'model://main_tube'
 tube = 'model://tube'
 
-poss = [[f"{1+i*0.5} 4", ["1.57", "-1.57"]] for i in range(1, 9)] + [[f"{round(5+ i*0.5*math.cos(30*math.pi/180), 2)} {round(4-i*0.5*math.sin(30*math.pi/180), 2)}", ["1.05", "-2.09"]] for i in range(1, 9)]
+poss = [random.randint(0,16)/100 +1]
 
-randPos = []   # Список для хранения случайно выбранных позиций зданий
-randTurn = [] # Список для хранения случайно выбранных цветов зданий
+randPos = [] 
+randTurn = []
 
-# Цикл для выбора случайных позиций и цветов для пяти зданий
-for i in range(5):
-    p = poss[random.randrange(len(poss))] # Выбор случайной позиции из списка
-    poss.remove(p)                        # Удаление выбранной позиции из списка возможных
-    randTurn.append(p[1][random.randrange(2)]) # Выбор случайного цвета и сохранения в список
-    randPos.append(p[0])     # Форматирование позиции в строку и сохрание в список
-    print(i, randPos[len(randPos)-1], randTurn[len(randTurn)-1])
+randPos.append(f"{poss[0]:.3f} 4.000")
+randTurn.append(1.57)
+print(f"[gen_tubes] 1, pos:{randPos[len(randPos)-1]}, turn:{randTurn[len(randTurn)-1]:.3f}")
+
+
+
+pold = 0
+i = 4
+while(i):
+    p = random.randint(int((poss[4-i]+0.75)*100), ((4-i)+2)*160 +1)/100
+    if p<5:
+      poss.append(p)
+      randPos.append(f"{p:.3f} 4.000")
+      if random.randint(0,1):
+        randTurn.append(90*math.pi/180)
+      else:
+         randTurn.append(270*math.pi/180)
+      pold = p
+      i = i-1
+      print(f"[gen_tubes] {4-i+1}, pos:{randPos[len(randPos)-1]}, turn:{randTurn[len(randTurn)-1]:.3f}")
+    else:
+      pp = (p - 5) / math.cos(30*math.pi/180)
+      if (pold < 5 and (((pp+5 - pold)**2 + (pp*math.sin(30*math.pi/180))**2)**0.5 > 0.75)) or pold > 5:
+        poss.append(pp+5)
+        randPos.append(f"{(pp+5):.3f} {(4-pp*math.sin(30*math.pi/180)-0.15):.3f}")
+        if random.randint(0,1):
+          randTurn.append(90*math.pi/180 -30*math.pi/180) 
+        else:
+          randTurn.append(270*math.pi/180 -30*math.pi/180)
+        pold = pp
+        i = i-1
+        print(f"[gen_tubes] {4-i+1}, pos:{randPos[len(randPos)-1]}, turn:{randTurn[len(randTurn)-1]:.3f}")
+    
 
 # Открытие файла для записи настроек мира
 world = open('/home/clover/catkin_ws/src/clover/clover_simulation/resources/worlds/clover_aruco.world', 'w')
