@@ -4,6 +4,8 @@ from flask_socketio import SocketIO
 from flask import Flask, request, jsonify, render_template
 import threading
 from std_msgs.msg import String
+from geometry_msgs.msg import PoseWithCovarianceStamped 
+import json
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -11,19 +13,23 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 class Bringe:
     action = "stopped" # stopped; started; killed
+    tubes = []
     def __init__(self):
-        rospy.init_node('web_bridge', anonymous=True)
+        rospy.init_node('cmd_bridge', anonymous=True)
+        self.cmd_pub = rospy.Publisher("/cmd/action", String, queue_size=10)
         
-        self.cmd_pub = rospy.Publisher('/web_action', String, queue_size=10)
-        
-        rospy.Subscriber('/tubes', String, self.tubes_callback)
-        rospy.Subscriber('/telemetry', String, self.telemetry_callback)
+        rospy.Subscriber("/tubes", String, self.tubes_callback)
+        rospy.Subscriber("/aruco_map/pose", PoseWithCovarianceStamped, self.pos_callback)
         
 
-    def telemetry_callback(self, msg):
-        socketio.emit('telemetry', {'data': msg.data})
+    def pos_callback(self, msg):
+        x = msg.pose.pose.position.x
+        y = msg.pose.pose.position.y
+        z = msg.pose.pose.position.z
+        socketio.emit('pos', {"x": x, "y": y, "z": z})
+
     def tubes_callback(self, msg):
-        socketio.emit('tube', {'data': msg.data})
+        socketio.emit('tubes', json.loads(msg.data))
 
     def send_command(self, command):
         msg = String()
@@ -46,22 +52,24 @@ ros_thread.start()
 
 @app.route("/api/start")
 def api_start():
-    Bringe.action = "started"
+    ros_node.action = "started"
     ros_node.send_command("start")
     return ""
 @app.route("/api/stop")
 def api_stop():
-    Bringe.action = "stopped"
+    ros_node.action = "stopped"
     ros_node.send_command("stop")
     return ""
 @app.route("/api/kill")
-def api_sill():
-    Bringe.action = "killed"
+def api_kill():
+    ros_node.action = "killed"
     ros_node.send_command("kill")
     return ""
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
 
 def start():
     socketio.run(app, host='0.0.0.0', port=5000, debug=False)

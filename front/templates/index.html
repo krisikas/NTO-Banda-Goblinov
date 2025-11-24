@@ -19,8 +19,11 @@
         console.log("Connected to Socket.IO server");
     });
 
-    socket.on("message", (data) => {
-        console.log("Received message:", data);
+    socket.on("pos", (data) => {
+        console.log("Received pos:", data, typeof(data)); //format: object {x: float, y: float, z: float}
+    });
+    socket.on("tubes", (data) => {
+        console.log("Received tubes:", data, typeof(data)); //format: array [sam opredeli, mne len]
     });
 
     socket.emit("sendMessage", "Hello from the client!");
