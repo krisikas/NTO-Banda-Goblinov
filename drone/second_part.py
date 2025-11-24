@@ -59,7 +59,7 @@ def second_part(deps, tubes, start_point, end_point):
             elif area == temp_tube[0]:
                 d = dist_point((telem.x, telem.y), end_point, start_point)
                 temp_tube[1] = (temp_tube[1] * temp_tube[2] + d) / (temp_tube[2] + 1)
-                temp_tube[2] += 1s
+                temp_tube[2] += 1
 
         elif temp_tube[2] != 0:
             tubes.append([temp_tube[1], 4, temp_tube[3]])
