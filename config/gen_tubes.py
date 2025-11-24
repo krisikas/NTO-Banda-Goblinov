@@ -12,8 +12,11 @@ randTurn = []
 
 
 
-tube_start_x = random.randint(0,60)/100
-tube_start_y = random.randint(70,930)/100
+#tube_start_x = random.randint(0,60)/100
+#tube_start_y = random.randint(70,930)/100
+tube_start_x = 1
+tube_start_y = 1
+tube_start_angle = random.randint(0, 90) * math.pi / 180
 print(tube_start_x)
 print(tube_start_y)
 tube_angle = random.randint(0,60)-30
@@ -32,9 +35,9 @@ while(i):
       poss.append(p)
       randPos.append(f"{p:.3f} {tube_start_y}")
       if random.randint(0,1):
-        randTurn.append(90*math.pi/180)
+        randTurn.append(tube_start_angle+90*math.pi/180)
       else:
-         randTurn.append(270*math.pi/180)
+         randTurn.append(tube_start_angle+270*math.pi/180)
       pold = p
       i = i-1
       print(f"[gen_tubes] {4-i+1}, pos:{randPos[len(randPos)-1]}, turn:{randTurn[len(randTurn)-1]}")
@@ -44,9 +47,9 @@ while(i):
         poss.append(p)
         randPos.append(f"{(pp+tube_start_x+4)} {((tube_start_y -(p-4)*math.sin(30*math.pi/180)))}")
         if random.randint(0,1):
-          randTurn.append(90*math.pi/180 -30*math.pi/180) 
+          randTurn.append(tube_start_angle+90*math.pi/180 -30*math.pi/180) 
         else:
-          randTurn.append(270*math.pi/180 -30*math.pi/180)
+          randTurn.append(tube_start_angle+270*math.pi/180 -30*math.pi/180)
         pold = p
         i = i-1
         print(f"[gen_tubes] {4-i+1}, pos:{randPos[len(randPos)-1]}, turn:{randTurn[len(randTurn)-1]:.3f}")
@@ -75,7 +78,7 @@ world.write(f'''<?xml version="1.0" ?>
     <include>
       <name>main_tube</name>
       <uri>{main_tube}</uri>
-      <pose>{tube_start_x} {tube_start_y} 0 0 0 1.57</pose>
+      <pose>{tube_start_x} {tube_start_y} 0 0 0 {tube_start_angle}</pose>
     </include>
 
     <include>
