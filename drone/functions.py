@@ -27,7 +27,7 @@ def navigate_wait(deps,
         rospy.sleep(0.2)
 
 
-def dist_point(pos, A, B):
+def proj_point(pos, A, B):
     AB = (B[0] - A[0], B[1] - A[1])
     BP = (pos[0] - B[0], pos[1] - B[1])
 

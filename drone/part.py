@@ -3,10 +3,10 @@ import math
 import rospy
 import cv2
 from sensor_msgs.msg import Image
-from functions import navigate_wait
+from functions import navigate_wait, dist_point
 
 
-def first_part(deps, tubes, start_point, end_point):
+def part(deps, tubes, start_point, end_point, isFirst):
 
     print("[clover] start scanning first part")
 
@@ -16,10 +16,11 @@ def first_part(deps, tubes, start_point, end_point):
         y=end_point[1],
         z=1,
         speed=0.12,
+        yaw=float('nan'),
         frame_id="aruco_map"
     )
 
-    temp_tube = [0, 0, 0, 0]
+    temp_tube = [0, 0, 0, 0] # format: x y angle mass cnt
 
     while not rospy.is_shutdown():
         image_msg = rospy.wait_for_message('main_camera/image_raw', Image)
@@ -51,16 +52,17 @@ def first_part(deps, tubes, start_point, end_point):
 
             print(f"{area:.2f}", f"{telem.x:.2f}")
 
-            if area > temp_coords[0]:
-                side = 1 if M["m10"] / M["m00"] > 30 else -1
-                temp_coords = [area, telem.x, 1, side]
-            elif area == temp_coords[0]:
-                temp_coords[1] = (temp_coords[1] * temp_coords[2] + telem.x) / (temp_coords[2] + 1)
-                temp_coords[2] += 1
+            if area > temp_tube[3]:
+                angle = (0 if M["m10"] / M["m00"] > 30 else math.pi) if isFirst else (math.pi/6 if M["m10"] / M["m00"] > 30 else math.pi*7/6)
+                temp_tube = [telem.x, 1, angle, area, 1]
+            elif area == temp_tube[3]:
+                temp_tube[0] = (temp_tube[0] * temp_tube[4] + telem.x) / (temp_tube[4] + 1)
+                temp_tube[4] += 1
 
-        elif temp_coords[2] != 0:
-            coords_tubes.append([temp_coords[1], 4, temp_coords[3]])
-            temp_coords = [0, 0, 0, 0]
+        elif temp_tube[4] != 0:
+            if len(tubes) == 0 or (((tubes[-1]["x"]-temp_tube[0])**2)+((tubes[-1]["y"]-temp_tube[1])**2))**0.5 >= 0.75:
+                tubes.append({"x": temp_tube[0], "y": temp_tube[1], "angle": temp_tube[2]})
+                temp_tube = [0, 0, 0, 0, 0]
 
         cv2.imshow('cropped', cropped)
         cv2.imshow('HSV Mask', mask)
@@ -68,22 +70,21 @@ def first_part(deps, tubes, start_point, end_point):
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-        print(f"[clover] scan first part: {coords_tubes} \n")
+        print("[clover] scan {}: {} \n".format("first" if isFirst else "second", tubes))
 
-    # Если в конце цикла остался "висящий" объект
-    if temp_coords[2] != 0:
-        coords_tubes.append([temp_coords[1], 4, temp_coords[3]])
-        temp_coords = [0, 0, 0, 0]
+    if temp_tube[2] != 0:
+        tubes.append([temp_tube[0], temp_tube[1], temp_tube[2]])
+        temp_tube = [0, 0, 0, 0, 0]
 
     # Поворачиваемся для второй части
-    navigate_wait(
-        deps,
-        x=5,
-        y=4,
-        z=1,
-        yaw=-math.pi / 6,
-        speed=0.12,
-        frame_id="aruco_map"
-    )
+    # navigate_wait(
+    #     deps,
+    #     x=5,
+    #     y=4,
+    #     z=1,
+    #     yaw=-math.pi / 6,
+    #     speed=0.12,
+    #     frame_id="aruco_map"
+    # )
 
-    print(f"[clover] end first part: {coords_tubes}")
+    print(f"[clover] END FIRST PART: {tubes}")

@@ -4,8 +4,8 @@ import rospy
 
 from deps import CloverDeps
 from functions import navigate_wait
-from first_part import first_part
-from second_part import second_part
+from part import part
+
 deps = CloverDeps(node_name='flight')
 
 first_start_point = (1, 1)
@@ -13,6 +13,7 @@ fist_end_point = (5.2, 1)
 second_start_point = (5, 1)
 second_end_poinny = (5+math.cos(math.pi/6)*4.2, 1+math.sin(math.pi/6)*4.2)
 
+tubes = [] # format: array [{x:float, y:float, angle:float(rad)}, {}]
 
 def main():
 
@@ -29,26 +30,27 @@ def main():
 
     navigate_wait(
         deps,
-        x=1,
-        y=4,
+        x=first_start_point[0],
+        y=first_start_point[1],
         z=1,
         frame_id="aruco_map"
     )
     rospy.sleep(3)
 
-    first_part(deps, tubes, first_start_point, fist_end_point)
+    part(deps, tubes, first_start_point, fist_end_point, True)
     rospy.sleep(3)
 
     navigate_wait(
         deps,
-        x=5,
-        y=4,
+        x=second_start_point[0],
+        y=second_start_point[1],
+        yaw=-math.pi / 6,
         z=1,
         frame_id="aruco_map"
     )
     rospy.sleep(3)
 
-    second_part(deps, tubes, first_start_point, fist_end_point)
+    part(deps, tubes, first_start_point, fist_end_point, False)
     rospy.sleep(3)
 
     navigate_wait(
