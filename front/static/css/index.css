@@ -1,0 +1,119 @@
+  
+.main {
+    width: 1520px;
+    height: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f2f2f2;
+    border: 1px solid #6f6f6f;
+    border-radius: 45px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+.map-block {
+    width: 1000px;
+    height: 1000px;
+    background: #ffffff;
+    border: 1px solid #6f6f6f;
+    border-radius: 35px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;        
+    flex-shrink: 0;
+}
+.corner-marker {
+    position: absolute;
+    left: 30px;
+    top: 30px;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    font-weight: bold;
+    color: #000000;
+    z-index: 2;
+    pointer-events: none;
+    font-family: monospace;
+}
+.tube {
+    position: absolute;
+    background: #545062;
+    border-radius: 15px;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+.tube.vertical {
+    left: 500px;
+    top: 75px;
+    width: 30px;
+    height: 450px;
+}
+.tube.diagonal {
+    left: 495px;
+    top: 488px; 
+    width: 30px;
+    height: 450px;
+    transform: rotate(30deg);
+    transform-origin: top left;
+}
+.panel-block {
+    width: 500px;
+    height: 1000px;
+    background: #ffffff;
+    border: 1px solid #6f6f6f;
+    border-radius: 35px;
+    font-family: monospace;
+    font-size: 1.2em;
+}
+.button-panel {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+.btn {
+    width: 33%;
+    margin-right: 6px;
+    padding: 10px;
+    font-size: 1.2em;
+    border-radius: 20px;
+    border: 2px solid #bbb;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.18s, border 0.18s;
+}
+.start-btn {
+    background: #eafaf0;
+    border-color: #5ccc7a;
+    color: #229c41;
+}
+.stop-btn {
+    background: #f7eaea;
+    border-color: #ff7070;
+    color: #991b1b;
+}
+.kill-btn {
+    background: #f7eaea;
+    border-color: #ff7070;
+    color: #991b1b;
+}
+.start-btn.active {
+    background: #00d300;
+}
+.stop-btn.active {
+    background: #ff0000;
+}
+.kill-btn.active {
+    background: #ff0000;
+}
+.found-vrez-block {
+    height: 620px;
+    background: #f2f2f2;
+    border-radius: 20px;
+    padding: 12px;
+    font-size: 1.3em;
+    margin-bottom: 5px;
+}

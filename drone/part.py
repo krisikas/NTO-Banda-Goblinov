@@ -4,6 +4,7 @@ import rospy
 import cv2
 from sensor_msgs.msg import Image
 from functions import navigate_wait, proj_point
+import json
 
 
 def part(deps, tubes, start_point, end_point, isFirst):
@@ -76,13 +77,15 @@ def part(deps, tubes, start_point, end_point, isFirst):
 
             if len(tubes) == 0 or (((tubes[-1]["x"]-cx)**2)+((tubes[-1]["y"]-cy)**2))**0.5 >= 0.75:
                 tubes.append({"x": cx, "y": cy, "angle": temp_tube[1]})
-                temp_tube = [0, 0, 0, 0, 0]
+                temp_tube = [0, 0, 0, 0, 0]  
+
 
         cv2.imshow('cropped', cropped)
         cv2.imshow('Filtered Result', result)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
+        deps.tubes_pub.publish(json.dumps(tubes))  
         print("[clover] scan {}: {} \n".format("first" if isFirst else "second", tubes))
 
     if temp_tube[2] != 0:
@@ -90,4 +93,5 @@ def part(deps, tubes, start_point, end_point, isFirst):
         temp_tube = [0, 0, 0, 0, 0]
 
 
+    deps.tubes_pub.publish(json.dumps(tubes)) 
     print("[clover] END {} PART: {}".format("FIRST" if isFirst else "SECOND", tubes))

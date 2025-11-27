@@ -5,6 +5,7 @@ from cv_bridge import CvBridge
 from clover import srv
 from std_srvs.srv import Trigger
 from mavros_msgs.srv import CommandBool
+from std_msgs.msg import String
 
 
 class CloverDeps:
@@ -18,6 +19,8 @@ class CloverDeps:
 
         self.bridge = CvBridge()
 
+        self.tubes_pub = rospy.Publisher('/tubes', String, queue_size=1)
+        self.tubes_pub.publish("[]")
         # HSV-границы для поиска труб
         self.lower_bound = np.array([33, 0, 0])
         self.upper_bound = np.array([179, 255, 255])

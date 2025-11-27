@@ -42,6 +42,7 @@ def main():
         x=first_start_point[0],
         y=first_start_point[1],
         z=1,
+        yaw= 0,
         frame_id="aruco_map"
     )
     rospy.sleep(3)
