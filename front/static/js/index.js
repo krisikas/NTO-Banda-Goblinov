@@ -1,4 +1,5 @@
 let drone_status = "stop"
+let drone_tubes = []
 
 
 
@@ -21,7 +22,7 @@ for (let y = 0; y < 10; y++) {
 
 // книпки управления миссией 2 балла --------СЮДА и статус миссиииии
 function start() {
-  if (drone_status != "stop")
+  if (drone_status != "stop" || drone_status == "end")
     return
   console.log('start');
   fetch('/api/start')
@@ -32,7 +33,7 @@ function start() {
 }
 
 function stop() {
-  if (drone_status != "start")
+  if (drone_status != "start" || drone_status == "end")
     return
   console.log('stop');
   fetch('/api/stop')
@@ -43,7 +44,7 @@ function stop() {
 }
 
 function kill() {
-  if (drone_status != "start")
+  if (drone_status != "start" || drone_status == "end")
     return
   console.log('kill');
   fetch('/api/kill')
@@ -74,7 +75,7 @@ socket.on("status", (data) => {
 });
 
 socket.on("pos", (data) => {
-  updateDronePosition(data.x, data.y);
+  updateDronePosition(data.x, data.y, data.z);
 });
 
 socket.on("tubes", (data) => {
@@ -105,8 +106,8 @@ function updateStatus() {
   }
   else if (drone_status == "kill") {
     document.querySelector('.kill-btn').classList.add('active');
-    document.querySelector('.start-btn').classList.remove('active');
-    document.querySelector('.stop-btn').classList.remove('active');
+    document.querySelector('.start-btn').classList.add('active');
+    document.querySelector('.stop-btn').classList.add('active');
     document.getElementById('mission-status').textContent = 'аварийная остановка';
   }
   else {
@@ -120,40 +121,40 @@ function updateStatus() {
 
 
 // координаты дрона вроде 0 баллов
-function updateDronePosition(x, y) {
+function updateDronePosition(x, y, z) {
   document.getElementById('drone-x').textContent = `x: ${y.toFixed(3)}`;
   document.getElementById('drone-y').textContent = `y: ${x.toFixed(3)}`;
   document.getElementById('drone-z').textContent = `z: ${z.toFixed(3)}`;
 }
 
 
+
 // /
-let vrezCount = 0
 function addVrez(tubes) {
   const list = document.getElementById('vrez-list');
 
-  if(tubes.length == 0){
+  if(JSON.stringify(tubes) != JSON.stringify(drone_tubes)){
+    drone_tubes = tubes;
     while (list.firstChild) {
       list.removeChild(list.firstChild);
     }
 
-    const verzs = document.querySelectorAll('.verz');
+    const verzs = document.querySelectorAll('#map .vrez');
 
     verzs.forEach(div => {
-      div.innerHTML = '';
+      div.remove();
     });
+    // console.log(vrezCount.cnt, tubes, tubes.length)
+    let cnt = 0
+    tubes.forEach(tube => {
+      drawVrez(tube.x, tube.y, tube.angle)
 
-    return
-  }
-  // console.log(vrezCount.cnt, tubes, tubes.length)
-  for(; vrezCount < tubes.length; vrezCount++) {
-    drawVrez(tubes[vrezCount].x, tubes[vrezCount].y, tubes[vrezCount].angle)
-
-    const item = document.createElement('li');
-    item.textContent = `${vrezCount+1}. x: ${tubes[vrezCount].x.toFixed(3)}, y: ${tubes[vrezCount].y.toFixed(3)}, angle: ${tubes[vrezCount].angle.toFixed(3)}`;
-    item.style.marginBottom = '8px';
-    item.style.fontSize = '0.95em';
-    list.appendChild(item);
+      const item = document.createElement('li');
+      item.textContent = `${++cnt}. x: ${tube.x.toFixed(3)}, y: ${tube.y.toFixed(3)}, angle: ${tube.angle.toFixed(3)}`;
+      item.style.marginBottom = '8px';
+      item.style.fontSize = '0.95em';
+      list.appendChild(item);
+    });
   }
 }
 

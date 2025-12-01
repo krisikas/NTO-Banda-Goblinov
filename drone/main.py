@@ -3,7 +3,7 @@ import math
 import rospy
 
 from deps import CloverDeps
-from functions import navigate_wait
+from functions import navigate_wait, check_cmd
 from part import part
 
 deps = CloverDeps(node_name='flight')
@@ -18,11 +18,11 @@ tubes = [] # format: array [{x:float, y:float, angle:float(rad)}, {}]
 def main():
 
     rospy.sleep(5)
-    
+
     deps.tubes_pub.publish("[]")
     deps.status_pub.publish("stop")
 
-    deps.check_cmd()
+    check_cmd(deps)
 
     print("[drone] fly to start")
 
@@ -34,12 +34,12 @@ def main():
         yaw= 0,
         frame_id="aruco_map"
     )
-    deps.check_cmd()
+    check_cmd(deps)
 
     rospy.sleep(3)
 
     part(deps, tubes, first_start_point, fist_end_point, True)
-    deps.check_cmd()
+    check_cmd(deps)
 
     rospy.sleep(3)
 
@@ -51,12 +51,12 @@ def main():
         z=1,
         frame_id="aruco_map"
     )
-    deps.check_cmd()
+    check_cmd(deps)
 
     rospy.sleep(3)
 
     part(deps, tubes, second_start_point, second_end_point, False)
-    deps.check_cmd()
+    check_cmd(deps)
 
     rospy.sleep(3)
 
