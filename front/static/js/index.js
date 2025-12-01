@@ -1,3 +1,7 @@
+let drone_status = "stop"
+
+
+
 // ээээээ хз зачем написал на JS мб чисто попробывать
 const map = document.getElementById('map');
 for (let y = 0; y < 10; y++) {
@@ -11,37 +15,41 @@ for (let y = 0; y < 10; y++) {
   map.appendChild(row);
 }
 
+
+
+
+
 // книпки управления миссией 2 балла --------СЮДА и статус миссиииии
 function start() {
+  if (drone_status != "stop")
+    return
   console.log('start');
   fetch('/api/start')
     .then(() => {
-      document.querySelector('.start-btn').classList.add('active');
-      document.querySelector('.stop-btn').classList.remove('active');
-      document.querySelector('.kill-btn').classList.remove('active');
-      document.getElementById('mission-status').textContent = 'выполняется';
+      drone_status = "start";
+      updateStatus("start");
     });
 }
 
 function stop() {
+  if (drone_status != "start")
+    return
   console.log('stop');
   fetch('/api/stop')
     .then(() => {
-      document.querySelector('.stop-btn').classList.add('active');
-      document.querySelector('.start-btn').classList.remove('active');
-      document.querySelector('.kill-btn').classList.remove('active');
-      document.getElementById('mission-status').textContent = 'остановлено';
+      drone_status = "stop";
+      updateStatus();
     });
 }
 
 function kill() {
+  if (drone_status != "start")
+    return
   console.log('kill');
   fetch('/api/kill')
     .then(() => {
-      document.querySelector('.kill-btn').classList.add('active');
-      document.querySelector('.start-btn').classList.remove('active');
-      document.querySelector('.stop-btn').classList.remove('active');
-      document.getElementById('mission-status').textContent = 'аварийная остановка';
+      drone_status = "kill";
+      updateStatus();
     });
 }
 
@@ -59,9 +67,13 @@ socket.on("connect", () => {
   document.getElementById('mission-status').textContent = 'подключено';
 });
 
+socket.on("status", (data) => {
+  console.log(data)
+  drone_status = data
+  updateStatus()
+});
+
 socket.on("pos", (data) => {
-  // data = {x: float, y: float, z: float}
-//   console.log("Received pos:", data);
   updateDronePosition(data.x, data.y);
 });
 
@@ -74,10 +86,44 @@ socket.on("tubes", (data) => {
 });
 
 
+
+
+
+
+function updateStatus() {
+  if (drone_status == "start") {
+    document.querySelector('.start-btn').classList.add('active');
+    document.querySelector('.stop-btn').classList.remove('active');
+    document.querySelector('.kill-btn').classList.remove('active');
+    document.getElementById('mission-status').textContent = 'выполняется';
+  }
+  else if (drone_status == "stop") {
+    document.querySelector('.stop-btn').classList.add('active');
+    document.querySelector('.start-btn').classList.remove('active');
+    document.querySelector('.kill-btn').classList.add('active');
+    document.getElementById('mission-status').textContent = 'остановлено';
+  }
+  else if (drone_status == "kill") {
+    document.querySelector('.kill-btn').classList.add('active');
+    document.querySelector('.start-btn').classList.remove('active');
+    document.querySelector('.stop-btn').classList.remove('active');
+    document.getElementById('mission-status').textContent = 'аварийная остановка';
+  }
+  else {
+    document.querySelector('.kill-btn').classList.add('active');
+    document.querySelector('.start-btn').classList.add('active');
+    document.querySelector('.stop-btn').classList.add('active');
+    document.getElementById('mission-status').textContent = 'выполнено';
+  }
+}
+
+
+
 // координаты дрона вроде 0 баллов
 function updateDronePosition(x, y) {
   document.getElementById('drone-x').textContent = `x: ${y.toFixed(3)}`;
-  document.getElementById('drone-y').textContent = `y: ${-x.toFixed(3)}`;
+  document.getElementById('drone-y').textContent = `y: ${x.toFixed(3)}`;
+  document.getElementById('drone-z').textContent = `z: ${z.toFixed(3)}`;
 }
 
 
@@ -85,6 +131,20 @@ function updateDronePosition(x, y) {
 let vrezCount = 0
 function addVrez(tubes) {
   const list = document.getElementById('vrez-list');
+
+  if(tubes.length == 0){
+    while (list.firstChild) {
+      list.removeChild(list.firstChild);
+    }
+
+    const verzs = document.querySelectorAll('.verz');
+
+    verzs.forEach(div => {
+      div.innerHTML = '';
+    });
+
+    return
+  }
   // console.log(vrezCount.cnt, tubes, tubes.length)
   for(; vrezCount < tubes.length; vrezCount++) {
     drawVrez(tubes[vrezCount].x, tubes[vrezCount].y, tubes[vrezCount].angle)

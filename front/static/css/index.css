@@ -41,8 +41,8 @@
 }
 .tube {
     position: absolute;
-    background: #545062;
-    border: solid 15px #545062;
+    background: #ff0000;
+    border: solid 15px #ff0000;
     border-radius: 15px;
     transform: translateY(-50%);
     z-index: 1000;
@@ -119,7 +119,7 @@
 .vrez {
     width: 250px;
     height: 10px;
-    background: #ff0000;
+    background: #0000ff;
     border-radius: 10px;
     transform-origin: left center;
     z-index: 999;

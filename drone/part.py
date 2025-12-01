@@ -9,21 +9,20 @@ import json
 
 def part(deps, tubes, start_point, end_point, isFirst):
 
-    print("[clover] start scanning part")
-
-
-    deps.navigate(
-        x=end_point[0],
-        y=end_point[1],
-        z=1,
-        speed=0.1,
-        yaw=float('nan'),
-        frame_id="aruco_map"
-    )
+    print("[drone] start scanning part")
 
     temp_tube = [0, 0, 0, 0] # format: dist angle mass cnt
 
     while not rospy.is_shutdown():
+        deps.navigate(
+            x=end_point[0],
+            y=end_point[1],
+            z=1,
+            speed=0.1,
+            yaw=float('nan'),
+            frame_id="aruco_map"
+        )
+
         image_msg = rospy.wait_for_message('main_camera/image_raw', Image)
         image = deps.bridge.imgmsg_to_cv2(image_msg, 'bgr8')
 
@@ -86,7 +85,9 @@ def part(deps, tubes, start_point, end_point, isFirst):
             break
 
         deps.tubes_pub.publish(json.dumps(tubes))  
-        print("[clover] scan {}: {} \n".format("first" if isFirst else "second", tubes))
+        print("[drone] scan {}: {} \n".format("first" if isFirst else "second", tubes))
+        
+        deps.check_cmd(True, telem.x, telem.y, telem.z)
 
     if temp_tube[2] != 0:
         tubes.append([temp_tube[0], temp_tube[1], temp_tube[2]])
@@ -94,4 +95,4 @@ def part(deps, tubes, start_point, end_point, isFirst):
 
 
     deps.tubes_pub.publish(json.dumps(tubes)) 
-    print("[clover] END {} PART: {}".format("FIRST" if isFirst else "SECOND", tubes))
+    print("[drone] END {} PART: {}".format("FIRST" if isFirst else "SECOND", tubes))

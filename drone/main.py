@@ -16,26 +16,15 @@ second_end_point = (5+math.cos(math.pi/6)*4.2, 1+math.sin(math.pi/6)*4.2)
 tubes = [] # format: array [{x:float, y:float, angle:float(rad)}, {}]
 
 def main():
-    # navigate_wait(
-    #     deps,
-    #     x=0,
-    #     y=0,
-    #     z=1,
-    #     frame_id="aruco_map",
-    #     auto_arm=True
-    # )
-    # deps.land()
 
-    print("[clover] fly to start")
+    rospy.sleep(5)
+    
+    deps.tubes_pub.publish("[]")
+    deps.status_pub.publish("stop")
 
-    navigate_wait(
-        deps,
-        x=0,
-        y=0,
-        z=1,
-        frame_id="body",
-        auto_arm=True
-    )
+    deps.check_cmd()
+
+    print("[drone] fly to start")
 
     navigate_wait(
         deps,
@@ -45,9 +34,13 @@ def main():
         yaw= 0,
         frame_id="aruco_map"
     )
+    deps.check_cmd()
+
     rospy.sleep(3)
 
     part(deps, tubes, first_start_point, fist_end_point, True)
+    deps.check_cmd()
+
     rospy.sleep(3)
 
     navigate_wait(
@@ -58,9 +51,13 @@ def main():
         z=1,
         frame_id="aruco_map"
     )
+    deps.check_cmd()
+
     rospy.sleep(3)
 
     part(deps, tubes, second_start_point, second_end_point, False)
+    deps.check_cmd()
+
     rospy.sleep(3)
 
     navigate_wait(
@@ -74,6 +71,7 @@ def main():
 
     deps.land()
     rospy.sleep(3)
+    deps.status_pub.publish("end")
 
 
 if __name__ == "__main__":
