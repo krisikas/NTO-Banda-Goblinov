@@ -16,7 +16,7 @@ class Bringe:
     tubes = []
     def __init__(self):
         rospy.init_node('cmd_bridge', anonymous=True)
-        self.cmd_pub = rospy.Publisher("/cmd/action", String, queue_size=10)
+        self.cmd_pub = rospy.Publisher("/cmd", String, queue_size=10)
         
         rospy.Subscriber("/tubes", String, self.tubes_callback)
         rospy.Subscriber("/aruco_map/pose", PoseWithCovarianceStamped, self.pos_callback)
@@ -75,7 +75,10 @@ def connect():
 
 
 def start():
-    socketio.run(app, host='0.0.0.0', port=5000, debug=False)
+    try:
+        socketio.run(app, host='0.0.0.0', port=5000, debug=False)
+    except KeyboardInterrupt:
+        rospy.signal_shutdown("Веб-сервер остановлен пользователем")
 
 if __name__ == "__main__":
     start()
