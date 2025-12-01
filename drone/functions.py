@@ -24,7 +24,7 @@ def navigate_wait(deps,
         telem = deps.get_telemetry(frame_id='navigate_target')
         if math.sqrt(telem.x ** 2 + telem.y ** 2 + telem.z ** 2) < tolerance:
             break
-        rospy.sleep(0.2)
+        rospy.sleep(0.1)
 
 
 def proj_point(pos, A, B):
