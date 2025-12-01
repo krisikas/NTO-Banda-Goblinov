@@ -54,7 +54,7 @@ def part(deps, tubes, start_point, end_point, isFirst):
             print(f"{area:.2f}", f"{telem.x:.2f}")
 
             if area > temp_tube[2]:
-                angle = (math.pi if M["m10"] / M["m00"] > 30 else 0) if isFirst else (math.pi*5/6 if M["m10"] / M["m00"] > 30 else -math.pi/6)
+                angle = (math.pi/2 if M["m10"] / M["m00"] > 30 else -math.pi/2) if isFirst else (math.pi*4/6 if M["m10"] / M["m00"] > 30 else -math.pi*4/6)
                 temp_tube = [
                     telem.x if isFirst else proj_point((telem.x, telem.y), end_point, start_point), 
                     angle, 

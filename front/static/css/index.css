@@ -25,8 +25,8 @@
 }
 .corner-marker {
     position: absolute;
-    left: 30px;
-    top: 30px;
+    left: -30px;
+    bottom: 330px;
     width: 100px;
     height: 100px;
     display: flex;
@@ -42,23 +42,22 @@
 .tube {
     position: absolute;
     background: #545062;
+    border: solid 15px #545062;
     border-radius: 15px;
-    transform: translateX(-50%);
+    transform: translateY(-50%);
     z-index: 1000;
 }
 .tube.vertical {
-    left: 500px;
-    top: 75px;
-    width: 30px;
-    height: 450px;
+    top: 500px;
+    left: 85px;
+    width: 400px;
 }
 .tube.diagonal {
-    left: 495px;
-    top: 488px; 
-    width: 30px;
-    height: 450px;
-    transform: rotate(30deg);
-    transform-origin: top left;
+    top: 490px;
+    left: 500px; 
+    width: 400px;
+    transform: rotate(-30deg);
+    transform-origin: left;
 }
 .panel-block {
     width: 500px;
@@ -117,3 +116,35 @@
     font-size: 1.3em;
     margin-bottom: 5px;
 }
+.vrez {
+    width: 250px;
+    height: 10px;
+    background: #ff0000;
+    border-radius: 10px;
+    transform-origin: left center;
+    z-index: 999;
+}
+
+.setka-row{
+    display: flex;
+    margin: 0;
+}
+.setka-kletka {
+    width:100px;
+    height: 100px;
+    border: 1px solid #bbb;
+    box-sizing: border-box;
+    background: #ffffff;
+    margin: 0;
+}
+.arrow-right { 
+    position:absolute;
+    top:600px;
+    left: 985px;
+    width: 0px;
+    height: 0px;
+    transform: translateY(-50%);
+    border-bottom: 7px solid transparent;
+    border-top: 7px solid transparent;
+    border-left: 15px solid black;
+ }
