@@ -26,7 +26,7 @@
 .corner-marker {
     position: absolute;
     left: -30px;
-    bottom: 330px;
+    bottom: 375px;
     width: 100px;
     height: 100px;
     display: flex;
@@ -109,7 +109,7 @@
     background: #ff0000;
 }
 .found-vrez-block {
-    height: 620px;
+    height: 595px;
     background: #f2f2f2;
     border-radius: 20px;
     padding: 12px;
@@ -140,11 +140,38 @@
 .arrow-right { 
     position:absolute;
     top:600px;
-    left: 985px;
+    left: 975px;
     width: 0px;
     height: 0px;
     transform: translateY(-50%);
     border-bottom: 7px solid transparent;
     border-top: 7px solid transparent;
     border-left: 15px solid black;
- }
+}
+.arrow-top { 
+    position:absolute;
+    top:50px;
+    left: -7px;
+    width: 0px;
+    height: 0px;
+    transform: translateY(-50%);
+    border-right: 7px solid transparent;
+    border-left: 7px solid transparent;
+    border-bottom: 15px solid black;
+}
+.line-top { 
+    position:absolute;
+    bottom:400px;
+    left: 0px;
+    width: 2px;
+    height: 547px;
+    background-color: black;
+}
+.line-right { 
+    position:absolute;
+    top:600px;
+    left: 0px;
+    width: 980px;
+    height: 2px;
+    background-color: black;
+}

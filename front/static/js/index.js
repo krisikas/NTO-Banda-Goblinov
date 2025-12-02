@@ -150,7 +150,7 @@ function addVrez(tubes) {
       drawVrez(tube.x, tube.y, tube.angle)
 
       const item = document.createElement('li');
-      item.textContent = `${++cnt}. x: ${tube.x.toFixed(3)}, y: ${tube.y.toFixed(3)}, angle: ${tube.angle.toFixed(3)}`;
+      item.textContent = `${++cnt}. x: ${tube.x.toFixed(3)}, y: ${tube.y.toFixed(3)}, angle: ${-tube.angle.toFixed(3)}`;
       item.style.marginBottom = '8px';
       item.style.fontSize = '0.95em';
       list.appendChild(item);
