@@ -3,7 +3,7 @@ import math
 import rospy
 
 from deps import CloverDeps
-from functions import navigate_wait
+from functions import navigate_wait, check_cmd
 from part import part
 
 deps = CloverDeps(node_name='flight')
@@ -16,37 +16,31 @@ second_end_point = (5+math.cos(math.pi/6)*4.2, 1+math.sin(math.pi/6)*4.2)
 tubes = [] # format: array [{x:float, y:float, angle:float(rad)}, {}]
 
 def main():
-    # navigate_wait(
-    #     deps,
-    #     x=0,
-    #     y=0,
-    #     z=1,
-    #     frame_id="aruco_map",
-    #     auto_arm=True
-    # )
-    # deps.land()
 
-    print("[clover] fly to start")
+    rospy.sleep(5)
 
-    navigate_wait(
-        deps,
-        x=0,
-        y=0,
-        z=1,
-        frame_id="body",
-        auto_arm=True
-    )
+    deps.tubes_pub.publish("[]")
+    deps.status_pub.publish("stop")
+
+    check_cmd(deps)
+
+    print("[drone] fly to start")
 
     navigate_wait(
         deps,
         x=first_start_point[0],
         y=first_start_point[1],
         z=1,
+        yaw= 0,
         frame_id="aruco_map"
     )
+    check_cmd(deps)
+
     rospy.sleep(3)
 
     part(deps, tubes, first_start_point, fist_end_point, True)
+    check_cmd(deps)
+
     rospy.sleep(3)
 
     navigate_wait(
@@ -57,9 +51,13 @@ def main():
         z=1,
         frame_id="aruco_map"
     )
+    check_cmd(deps)
+
     rospy.sleep(3)
 
     part(deps, tubes, second_start_point, second_end_point, False)
+    check_cmd(deps)
+
     rospy.sleep(3)
 
     navigate_wait(
@@ -73,6 +71,7 @@ def main():
 
     deps.land()
     rospy.sleep(3)
+    deps.status_pub.publish("end")
 
 
 if __name__ == "__main__":

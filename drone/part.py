@@ -3,26 +3,26 @@ import math
 import rospy
 import cv2
 from sensor_msgs.msg import Image
-from functions import navigate_wait, proj_point
+from functions import navigate_wait, proj_point, check_cmd
+import json
 
 
 def part(deps, tubes, start_point, end_point, isFirst):
 
-    print("[clover] start scanning part")
-
-
-    deps.navigate(
-        x=end_point[0],
-        y=end_point[1],
-        z=1,
-        speed=0.1,
-        yaw=float('nan'),
-        frame_id="aruco_map"
-    )
+    print("[drone] START SCANNING PART")
 
     temp_tube = [0, 0, 0, 0] # format: dist angle mass cnt
 
     while not rospy.is_shutdown():
+        deps.navigate(
+            x=end_point[0],
+            y=end_point[1],
+            z=1,
+            speed=0.1,
+            yaw=float('nan'),
+            frame_id="aruco_map"
+        )
+
         image_msg = rospy.wait_for_message('main_camera/image_raw', Image)
         image = deps.bridge.imgmsg_to_cv2(image_msg, 'bgr8')
 
@@ -49,11 +49,10 @@ def part(deps, tubes, start_point, end_point, isFirst):
             contr = max(contrs, key=cv2.contourArea)
             M = cv2.moments(contr)
             area = M['m00']
-
-            print(f"{area:.2f}", f"{telem.x:.2f}")
+            print(f"[drone] TUBE: {area:.2f}", f"{telem.x:.2f}")
 
             if area > temp_tube[2]:
-                angle = (math.pi if M["m10"] / M["m00"] > 30 else 0) if isFirst else (math.pi*5/6 if M["m10"] / M["m00"] > 30 else -math.pi/6)
+                angle = (math.pi/2 if M["m10"] / M["m00"] > 30 else -math.pi/2) if isFirst else (math.pi*2/6 if M["m10"] / M["m00"] > 30 else -math.pi*4/6)
                 temp_tube = [
                     telem.x if isFirst else proj_point((telem.x, telem.y), end_point, start_point), 
                     angle, 
@@ -76,18 +75,27 @@ def part(deps, tubes, start_point, end_point, isFirst):
 
             if len(tubes) == 0 or (((tubes[-1]["x"]-cx)**2)+((tubes[-1]["y"]-cy)**2))**0.5 >= 0.75:
                 tubes.append({"x": cx, "y": cy, "angle": temp_tube[1]})
-                temp_tube = [0, 0, 0, 0, 0]
+            temp_tube = [0, 0, 0, 0, 0]  
 
-        cv2.imshow('cropped', cropped)
-        cv2.imshow('Filtered Result', result)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        deps.tubes_pub.publish(json.dumps(tubes))  
+        print("[drone] SCAN {}: {} \n".format("first" if isFirst else "second", tubes))
+        
+        check_cmd(deps, True, telem.x, telem.y, telem.z)
 
-        print("[clover] scan {}: {} \n".format("first" if isFirst else "second", tubes))
+        # cv2.imshow('cropped', cropped)
+        # cv2.imshow('Filtered Result', result)
+        # if cv2.waitKey(1) & 0xFF == ord('q'):
+        #     break
 
-    if temp_tube[2] != 0:
-        tubes.append([temp_tube[0], temp_tube[1], temp_tube[2]])
-        temp_tube = [0, 0, 0, 0, 0]
+    if temp_tube[3] != 0:
+        if isFirst:
+            cx, cy = temp_tube[0], 1
+        else:
+            cx, cy = start_point[0] + temp_tube[0]*math.cos(math.pi/6) , start_point[1] + temp_tube[0]*math.sin(math.pi/6)
+        if len(tubes) == 0 or (((tubes[-1]["x"]-cx)**2)+((tubes[-1]["y"]-cy)**2))**0.5 >= 0.75:
+            tubes.append({"x": cx, "y": cy, "angle": temp_tube[1]})
+            temp_tube = [0, 0, 0, 0, 0]  
 
 
-    print("[clover] END {} PART: {}".format("FIRST" if isFirst else "SECOND", tubes))
+    deps.tubes_pub.publish(json.dumps(tubes)) 
+    print("[drone] END {} PART: {}".format("FIRST" if isFirst else "SECOND", tubes))

@@ -1,349 +1,61 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>банда гоблинов</title>
-    <style>
-      
-      .main {
-        width: 1520px;
-        height: 1000px;
-        margin: 0 auto;
-        padding: 20px;
-        background: #f2f2f2;
-        border: 1px solid #6f6f6f;
-        border-radius: 45px;
-        display: flex;
-        flex-direction: row;
-        gap: 20px; }
-      .map-block {
-        width: 1000px;
-        height: 1000px;
-        background: #ffffff;
-        border: 1px solid #6f6f6f;
-        border-radius: 35px;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;        
-        flex-shrink: 0;}
-      .corner-marker {
-        position: absolute;
-        left: 30px;
-        top: 30px;
-        width: 100px;
-        height: 100px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2em;
-        font-weight: bold;
-        color: #000000;
-        z-index: 2;
-        pointer-events: none;
-        font-family: monospace;}
-      .tube {
-        position: absolute;
-        background: #545062;
-        border-radius: 15px;
-        transform: translateX(-50%);
-        z-index: 1000;}
-      .tube.vertical {
-        left: 500px;
-        top: 75px;
-        width: 30px;
-        height: 450px;}
-      .tube.diagonal {
-        left: 495px;
-        top: 488px; 
-        width: 30px;
-        height: 450px;
-        transform: rotate(30deg);
-        transform-origin: top left;}
-      .panel-block {
-        width: 500px;
-        height: 1000px;
-        background: #ffffff;
-        border: 1px solid #6f6f6f;
-        border-radius: 35px;
-        font-family: monospace;
-        font-size: 1.2em;}
-      .button-panel {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 18px;}
-      .btn {
-        width: 33%;
-        margin-right: 6px;
-  padding: 10px;
-  font-size: 1.2em;
-  border-radius: 20px;
-  border: 2px solid #bbb;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.18s, border 0.18s;}
-      .start-btn {
-        background: #eafaf0;
-        border-color: #5ccc7a;
-        color: #229c41;}
-      .stop-btn {
-        background: #f7eaea;
-        border-color: #ff7070;
-        color: #991b1b;}
-      .kill-btn {
-        background: #f7eaea;
-        border-color: #ff7070;
-        color: #991b1b;}
-      .start-btn.active {
-      background: #00d300;}
-      .stop-btn.active {
-        background: #ff0000;}
-      .kill-btn.active {
-        background: #ff0000;}
-      .found-vrez-block {
-        height: 620px;
-        background: #f2f2f2;
-        border-radius: 20px;
-        padding: 12px;
-        font-size: 1.3em;
-        margin-bottom: 5px;}
-
-    </style>
-  </head>
+<head>
+  <title>Банда Гоблинов</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
 
 
 
-  <body>
-    
-    <div class="main">
-<div class="map-block" id="map">
-  <span class="corner-marker">0</span>
-    <div class="tube vertical"></div>
-    <div class="tube diagonal"></div>
-</div>
-      <div class="panel-block">
-  <div style="padding: 15px;">
-    <div style="background: #f2f2f2; border-radius: 25px; padding: 50px 0; font-size: 1.25em; font-weight: bold; text-align: center; margin-bottom:15px;">
-      НТО ЛР командная задача <br>
-      банда гоблинов
-    </div>
-
-      <div class="button-panel">
-    <button class="btn start-btn" onclick="start()">start</button>
-    <button class="btn stop-btn" onclick="stop()">stop</button>
-    <button class="btn kill-btn" onclick="kill()">kill switch</button>
-      </div>
-
-
-    <div style="display: flex; gap:12px; margin-bottom: 18px;">
-      <div style="flex:1; background: #f2f2f2; border-radius:15px; padding:12px; font-size:1em;">
-        <b>статус миссии:</b><br>
-        <span id="mission-status">действий не била</span>
-      </div>
-      <div style="flex:1; background: #f2f2f2; border-radius:15px; padding:12px; font-size:1em;">
-      <b>координаты дрона:</b> <br>
-      <span id="drone-x">x: 0</span> <br>
-      <span id="drone-y">y: 0</span>
-      </div>
-    </div>
-
-<div class="found-vrez-block">
-  <b>найденные врезки:</b> <br>
-  <ul id="vrez list"></ul>
-</div>
-</div>
-</div>
-
-
-
-
-
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-    <script>
-
-
-
-  const socket = io();
+<body>
   
-  socket.on("connect", () => {
-    console.log("Connected to Socket.IO server");
-    document.getElementById('mission-status').textContent = 'подключено';
-  });
+  <div class="main">
+    <div class="map-block" id="map">
+      <span class="corner-marker">0</span>
+      <div class="arrow-right"></div>
+      <div class="arrow-top"></div>
+      <div class="line-top"></div>
+      <div class="line-right"></div>
+      <div class="tube vertical"></div>
+      <div class="tube diagonal"></div>
+    </div>
+    <div class="panel-block">
+    <div style="padding: 15px;">
+      <div style="background: #f2f2f2; border-radius: 25px; padding: 50px 0; font-size: 1.25em; font-weight: bold; text-align: center; margin-bottom:15px;">
+        НТО ЛР командная задача <br>
+        Банда Гоблинов
+      </div>
+      <div class="button-panel">
+        <button class="btn start-btn" onclick="start()">start</button>
+        <button class="btn stop-btn" onclick="stop()">stop</button>
+        <button class="btn kill-btn" onclick="kill()">kill switch</button>
+      </div>
 
-  socket.on("pos", (data) => {
-    // data = {x: float, y: float, z: float}
-    console.log("Received pos:", data);
-    updateDronePosition(data.x, data.y);
-  });
+      <div style="display: flex; gap:12px; margin-bottom: 18px;">
+        <div style="flex:1; background: #f2f2f2; border-radius:15px; padding:12px; font-size:1em;">
+          <b>статус миссии:</b><br>
+          <span id="mission-status">действий не била</span>
+        </div>
+        <div style="flex:1; background: #f2f2f2; border-radius:15px; padding:12px; font-size:1em;">
+          <b>координаты дрона:</b> <br>
+          <span id="drone-x">x: 0</span> <br>
+          <span id="drone-y">y: 0</span> <br>
+          <span id="drone-z">z: 0</span>
+        </div>
+      </div>
 
-  socket.on("tubes", (data) => {
-    // data = массив (какая труба, координаты от начала )
-    console.log("Received tubes:", data);
-    
-
-    
-    // Добавляем врезки в список
-    data.forEach(tube => {
-      addVrezToList(tube.x, tube.y, tube.color, tube.id);
-    });
-  });
-
-
-// координаты дрона вроде 0 баллов
-function updateDronePosition(x, y) {
-  document.getElementById('drone-x').textContent = `x: ${x}`;
-  document.getElementById('drone-y').textContent = `y: ${y}`;
-}
-
-
-  // ээээээ хз зачем написал на JS мб чисто попробывать
-  const map = document.getElementById('map');
-  for (let y = 0; y < 10; y++) {
-    const row = document.createElement('div');
-    row.style.display = 'flex';
-    row.style.margin = '0';
-    for (let x = 0; x < 10; x++) {
-      const cell = document.createElement('div');
-      cell.style.width = '100px';
-      cell.style.height = '100px';
-      cell.style.border = '1px solid #bbb';
-      cell.style.boxSizing = 'border-box';
-      cell.style.background = '#ffffff';
-      cell.style.margin = '0';
-      row.appendChild(cell);
-    }
-    map.appendChild(row);
-  }
+      <div class="found-vrez-block">
+        <b>найденные врезки:</b> <br>
+        <ul id="vrez-list"></ul>
+      </div>
+    </div>
+  </div>
 
 
+  <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 
-
-
-
- 
-
-
-  // книпки управления миссией 2 балла --------СЮДА и статус миссиииии
-  function start() {
-    console.log("start");
-    fetch('/api/start')
-      .then(() => {
-        document.querySelector('.start-btn').classList.add('active');
-        document.querySelector('.stop-btn').classList.remove('active');
-        document.querySelector('.kill-btn').classList.remove('active');
-        document.getElementById('mission-status').textContent = 'выполняется';
-      });
-  }
-
-  function stop() {
-    console.log("stop");
-    fetch('/api/stop')
-      .then(() => {
-        document.querySelector('.stop-btn').classList.add('active');
-        document.querySelector('.start-btn').classList.remove('active');
-        document.querySelector('.kill-btn').classList.remove('active');
-        document.getElementById('mission-status').textContent = 'остановлено';
-      });
-  }
-
-  function kill() {
-    console.log("kill");
-    fetch('/api/kill')
-      .then(() => {
-        document.querySelector('.kill-btn').classList.add('active');
-        document.querySelector('.start-btn').classList.remove('active');
-        document.querySelector('.stop-btn').classList.remove('active');
-        document.getElementById('mission-status').textContent = 'аварийная остановка';
-      });
-  }
-
-
-
-
-
-
- // /
-  const vrezCounter = { count: 0 };
-  function addVrezToList(x, y, color, id) {
-    vrezCounter.count++;
-    const list = document.getElementById('vrez-list');
-    const item = document.createElement('li');
-    item.textContent = `${vrezCounter.count}. id: ${id}, x: ${x}, y: ${y}, цвет: ${color}`;
-    item.style.marginBottom = '8px';
-    item.style.fontSize = '0.95em';
-    list.appendChild(item);
-  }
-
-  function drawVrez (x, y, angle) {
-    const cx = 100*(x+1)
-    const cy = 100*(y)
-    const bDeg = angle * Math.PI / 180
-
-    const DVrez = document.createElement('div');
-    DVrez.style.position = 'absolute';
-    DVrez.style.left = cx + 'px';
-    DVrez.style.top = cy + 'px';
-    DVrez.style.width = '250px';
-    DVrez.style.height = '10px';
-    DVrez.style.background = "#ff0000";
-    DVrez.style.borderRadius = "10px";
-    DVrez.style.transformOrigin = 'left center';
-    DVrez.style.transform = `rotate(${bDeg}deg)`;
-    DVrez.style.zIndex = '999';
-    document.getElementById('map').appendChild(DVrez);
-  }
-
-  function drawVVrez(distance, side) {
-    const x = side === "left" ? (485 - 250) : (485 + 30);
-    const y = 75 + distance;
-    const VVrez = document.createElement('div');
-    VVrez.style.position = 'absolute';
-    VVrez.style.left = x + 'px';
-    VVrez.style.top = y + 'px';
-    VVrez.style.width = '250px';
-    VVrez.style.height = '10px';
-    VVrez.style.background = "#ff0000";
-    VVrez.style.borderRadius = "10px";
-    VVrez.style.zIndex = '999';
-    document.getElementById('map').appendChild(VVrez);
-  }
-
-  function drawDVrez(distance, side) {
-    const angle = 120;
-    const a = angle * Math.PI / 180;
-    const cx = 495 + distance * Math.cos(a);
-    const cy = 488 + distance * Math.sin(a);
-    const bDeg = side === "left" ? angle - 90 : angle + 90;
-
-    const DVrez = document.createElement('div');
-    DVrez.style.position = 'absolute';
-    DVrez.style.left = cx + 'px';
-    DVrez.style.top = cy + 'px';
-    DVrez.style.width = '250px';
-    DVrez.style.height = '10px';
-    DVrez.style.background = "#ff0000";
-    DVrez.style.borderRadius = "10px";
-    DVrez.style.transformOrigin = 'left center';
-    DVrez.style.transform = `rotate(${bDeg}deg)`;
-    DVrez.style.zIndex = '999';
-    document.getElementById('map').appendChild(DVrez);
-  }
-
-
-
-
- // эээээээ это примеры врезок не путай тут
-      // drawVVrez(120, 'left');
-      // drawVVrez(300, 'right');
-      // drawDVrez(400, 'right');
-      // drawDVrez(150, 'left');
-      // drawDVrez(20, 'right');
-      drawVrez(4, 1, 0)
-
-
-
-
-    </script>
-  </body>
+</body>
 </html>
 
 
