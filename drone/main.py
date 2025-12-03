@@ -6,43 +6,55 @@ from deps import CloverDeps
 from functions import navigate_wait, check_cmd
 from part import part
 
+# Инициализация зависимостей для работы с дроном
 deps = CloverDeps(node_name='flight')
 
+# Ключевые точки маршрута
 first_start_point = (1, 1)
 fist_end_point = (5.2, 1)
 second_start_point = (5, 1)
-second_end_point = (5+math.cos(math.pi/6)*4.2, 1+math.sin(math.pi/6)*4.2)
+second_end_point = (5 + math.cos(math.pi / 6) * 4.2,
+                    1 + math.sin(math.pi / 6) * 4.2)
 
-tubes = [] # format: array [{x:float, y:float, angle:float(rad)}, {}]
+# Список труб, которые будут обнаружены дроном
+# формат: [{x: float, y: float, angle: float(рад)}, ...]
+tubes = []
+
 
 def main():
 
+    # Небольшая пауза после старта ноды
     rospy.sleep(5)
 
+    # Инициализация топиков труб и статуса
     deps.tubes_pub.publish("[]")
     deps.status_pub.publish("stop")
 
+    # Ожидание команды на запуск/остановку
     check_cmd(deps)
 
     print("[drone] fly to start")
 
+    # Вылет к первой стартовой точке
     navigate_wait(
         deps,
         x=first_start_point[0],
         y=first_start_point[1],
         z=1,
-        yaw= 0,
+        yaw=0,
         frame_id="aruco_map"
     )
     check_cmd(deps)
 
     rospy.sleep(3)
 
+    # Обработка первой части трассы (прямой участок)
     part(deps, tubes, first_start_point, fist_end_point, True)
     check_cmd(deps)
 
     rospy.sleep(3)
 
+    # Перелёт ко второй стартовой точке с нужным разворотом
     navigate_wait(
         deps,
         x=second_start_point[0],
@@ -55,11 +67,13 @@ def main():
 
     rospy.sleep(3)
 
+    # Обработка второй части трассы (под углом)
     part(deps, tubes, second_start_point, second_end_point, False)
     check_cmd(deps)
 
     rospy.sleep(3)
 
+    # Возврат к точке (0, 0) на высоте 1 м
     navigate_wait(
         deps,
         x=0,
@@ -69,6 +83,7 @@ def main():
     )
     rospy.sleep(1)
 
+    # Посадка и завершение миссии
     deps.land()
     rospy.sleep(3)
     deps.status_pub.publish("end")
