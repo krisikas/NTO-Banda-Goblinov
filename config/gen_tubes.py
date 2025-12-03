@@ -1,58 +1,41 @@
 import random  # Импортируем модуль random для генерации случайных чисел
 import math
 
-
+#Импорт моделей труб
 main_tube = 'model://main_tube'
 tube = 'model://tube'
 
-
-
+poss = [random.randint(0,16)/100 +1]    #Выбираем случайную позицию для первой врезки между 0 и 8/5 длины трубы(чтобы точно хватило места для 5 врезок) 
 randPos = [] 
 randTurn = []
 
-
-
-#tube_start_x = random.randint(0,60)/100
-#tube_start_y = random.randint(70,930)/100
-tube_start_x = 1
-tube_start_y = 1
-tube_start_angle = random.randint(0, 90) * math.pi / 180
-print(tube_start_x)
-print(tube_start_y)
-tube_angle = random.randint(0,60)-30
-
-poss = [random.randint(0,160)/100 + tube_start_x]
-
-randPos.append(f"{poss[0]:.3f} {tube_start_y}")
+randPos.append(f"{poss[0]:.3f} 1.000")    #Создаем первую врезку
 randTurn.append(1.57)
-print(f"[gen_tubes] 1, pos:{randPos[len(randPos)-1]}, turn:{randTurn[len(randTurn)-1]:.3f}")
 
 pold = 0
 i = 4
 while(i):
-    p = random.randint(int((poss[4-i]+0.75)*100), round(((4-i+2)*1.6)*100 +tube_start_x))/100
-    if p<4:
+    p = random.randint(int((poss[4-i]+0.75)*100), ((4-i)+2)*160 +1)/100   #Выбираем позицию для следующей рейки, отступая 0,75 от предыдущей
+    if p<5:   #Если выбрали позицию на превой половине трубы (до изгиба), то записываем позицию без изменений
       poss.append(p)
-      randPos.append(f"{p:.3f} {tube_start_y}")
+      randPos.append(f"{p:.3f} 1.000")
       if random.randint(0,1):
-        randTurn.append(tube_start_angle+90*math.pi/180)
+        randTurn.append(90*math.pi/180)   #Выбираем с какой стороны трубы будет врезка (справа/слева)
       else:
-         randTurn.append(tube_start_angle+270*math.pi/180)
+         randTurn.append(270*math.pi/180)
       pold = p
       i = i-1
-      print(f"[gen_tubes] {4-i+1}, pos:{randPos[len(randPos)-1]}, turn:{randTurn[len(randTurn)-1]}")
-    else:
-      pp = (p - 4) * math.cos(30*math.pi/180)
-      if (pold < tube_start_x+4 and (((pp+tube_start_x+4 - pold)**2 + (pp*math.sin(30*math.pi/180))**2)**0.5 > 0.75)) or pold > tube_start_x+4:
+    else:   #Если же выбранная позиция на второй половине трубы, то конвертируем координаты трубы из одномерной системы в двумерную
+      pp = (p - 5)
+      if (pold < 5 and (((pp*math.cos(30*math.pi/180)+5-pold)**2 + (pp*math.cos(30*math.pi/180)*math.tan(30*math.pi/180))**2)**0.5)>0.75) or pold > 5:    #Проверяем, что расстояние между предыдущей врезкой (если она была до изгиба трубы) и создаваемой не меньше 0.75
         poss.append(p)
-        randPos.append(f"{(pp+tube_start_x+4)} {((tube_start_y -(p-4)*math.sin(30*math.pi/180)))}")
+        randPos.append(f"{(pp*math.cos(30*math.pi/180)+5):.3f} {(1+pp*math.cos(30*math.pi/180)*math.tan(30*math.pi/180)):.3f}")
         if random.randint(0,1):
-          randTurn.append(tube_start_angle+90*math.pi/180 -30*math.pi/180) 
+          randTurn.append(90*math.pi/180 +30*math.pi/180)     #Выбираем с какой стороны трубы будет врезка (справа/слева)
         else:
-          randTurn.append(tube_start_angle+270*math.pi/180 -30*math.pi/180)
-        pold = p
+          randTurn.append(270*math.pi/180 +30*math.pi/180)
+        pold = pp
         i = i-1
-        print(f"[gen_tubes] {4-i+1}, pos:{randPos[len(randPos)-1]}, turn:{randTurn[len(randTurn)-1]:.3f}")
     
 
 # Открытие файла для записи настроек мира
@@ -78,7 +61,7 @@ world.write(f'''<?xml version="1.0" ?>
     <include>
       <name>main_tube</name>
       <uri>{main_tube}</uri>
-      <pose>{tube_start_x} {tube_start_y} 0 0 0 {tube_start_angle}</pose>
+      <pose>1 1 0 0 {1.57*2} 1.57</pose>
     </include>
 
     <include>
