@@ -10,6 +10,7 @@ environmentFile = '/home/clover/catkin_ws/src/clover/clover_simulation/resources
 markerData = '/home/clover/catkin_ws/src/clover/aruco_pose/map/'
 
 
+#Перенос моделей в необходимую папку
 shutil.copytree('./models/main_tube', simulationModels + 'main_tube')
 shutil.copytree('./models/tube', simulationModels + 'tube')
 

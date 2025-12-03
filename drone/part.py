@@ -93,7 +93,7 @@ def part(deps, tubes, start_point, end_point, isFirst):
 
             # Добавляем трубу, если она не слишком близко к предыдущей
             if len(tubes) == 0 or (((tubes[-1]["x"] - cx) ** 2) + ((tubes[-1]["y"] - cy) ** 2)) ** 0.5 >= 0.75:
-                tubes.append({"x": cx, "y": cy, "angle": temp_tube[1]})
+                tubes.append({"x": cx, "y": cy, "angle": -temp_tube[1]})
             temp_tube = [0, 0, 0, 0, 0]
 
         # Публикуем список найденных труб
@@ -118,7 +118,7 @@ def part(deps, tubes, start_point, end_point, isFirst):
             cy = start_point[1] + temp_tube[0] * math.sin(math.pi / 6)
 
         if len(tubes) == 0 or (((tubes[-1]["x"] - cx) ** 2) + ((tubes[-1]["y"] - cy) ** 2)) ** 0.5 >= 0.75:
-            tubes.append({"x": cx, "y": cy, "angle": temp_tube[1]})
+            tubes.append({"x": cx, "y": cy, "angle": -temp_tube[1]})
             temp_tube = [0, 0, 0, 0, 0]
 
     # Финальная публикация и лог
