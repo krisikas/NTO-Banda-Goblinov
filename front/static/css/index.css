@@ -1,0 +1,177 @@
+  
+.main {
+    width: 1520px;
+    height: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f2f2f2;
+    border: 1px solid #6f6f6f;
+    border-radius: 45px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+.map-block {
+    width: 1000px;
+    height: 1000px;
+    background: #ffffff;
+    border: 1px solid #6f6f6f;
+    border-radius: 35px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;        
+    flex-shrink: 0;
+}
+.corner-marker {
+    position: absolute;
+    left: -30px;
+    bottom: 375px;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    font-weight: bold;
+    color: #000000;
+    z-index: 2;
+    pointer-events: none;
+    font-family: monospace;
+}
+.tube {
+    position: absolute;
+    background: #ff0000;
+    border: solid 15px #ff0000;
+    border-radius: 15px;
+    transform: translateY(-50%);
+    z-index: 1000;
+}
+.tube.vertical {
+    top: 500px;
+    left: 85px;
+    width: 400px;
+}
+.tube.diagonal {
+    top: 490px;
+    left: 500px; 
+    width: 400px;
+    transform: rotate(-30deg);
+    transform-origin: left;
+}
+.panel-block {
+    width: 500px;
+    height: 1000px;
+    background: #ffffff;
+    border: 1px solid #6f6f6f;
+    border-radius: 35px;
+    font-family: monospace;
+    font-size: 1.2em;
+}
+.button-panel {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+.btn {
+    width: 33%;
+    margin-right: 6px;
+    padding: 10px;
+    font-size: 1.2em;
+    border-radius: 20px;
+    border: 2px solid #bbb;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.18s, border 0.18s;
+}
+.start-btn {
+    background: #eafaf0;
+    border-color: #5ccc7a;
+    color: #229c41;
+}
+.stop-btn {
+    background: #f7eaea;
+    border-color: #ff7070;
+    color: #991b1b;
+}
+.kill-btn {
+    background: #f7eaea;
+    border-color: #ff7070;
+    color: #991b1b;
+}
+.start-btn.active {
+    background: #00d300;
+}
+.stop-btn.active {
+    background: #ff0000;
+}
+.kill-btn.active {
+    background: #ff0000;
+}
+.found-vrez-block {
+    height: 595px;
+    background: #f2f2f2;
+    border-radius: 20px;
+    padding: 12px;
+    font-size: 1.3em;
+    margin-bottom: 5px;
+}
+.vrez {
+    width: 250px;
+    height: 10px;
+    background: #0000ff;
+    border-radius: 10px;
+    transform-origin: left center;
+    z-index: 999;
+}
+
+.setka-row{
+    display: flex;
+    margin: 0;
+}
+.setka-kletka {
+    width:100px;
+    height: 100px;
+    border: 1px solid #bbb;
+    box-sizing: border-box;
+    background: #ffffff;
+    margin: 0;
+}
+.arrow-right { 
+    position:absolute;
+    top:600px;
+    left: 975px;
+    width: 0px;
+    height: 0px;
+    transform: translateY(-50%);
+    border-bottom: 7px solid transparent;
+    border-top: 7px solid transparent;
+    border-left: 15px solid black;
+}
+.arrow-top { 
+    position:absolute;
+    top:50px;
+    left: -7px;
+    width: 0px;
+    height: 0px;
+    transform: translateY(-50%);
+    border-right: 7px solid transparent;
+    border-left: 7px solid transparent;
+    border-bottom: 15px solid black;
+}
+.line-top { 
+    position:absolute;
+    bottom:400px;
+    left: 0px;
+    width: 2px;
+    height: 547px;
+    background-color: black;
+}
+.line-right { 
+    position:absolute;
+    top:600px;
+    left: 0px;
+    width: 980px;
+    height: 2px;
+    background-color: black;
+}

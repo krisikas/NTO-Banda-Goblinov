@@ -1,43 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <title>Банда Гоблинов</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 </head>
+
+
+
 <body>
+  
+  <div class="main">
+    <div class="map-block" id="map">
+      <span class="corner-marker">0</span>
+      <div class="arrow-right"></div>
+      <div class="arrow-top"></div>
+      <div class="line-top"></div>
+      <div class="line-right"></div>
+      <div class="tube vertical"></div>
+      <div class="tube diagonal"></div>
+    </div>
+    <div class="panel-block">
+    <div style="padding: 15px;">
+      <div style="background: #f2f2f2; border-radius: 25px; padding: 50px 0; font-size: 1.25em; font-weight: bold; text-align: center; margin-bottom:15px;">
+        НТО ЛР командная задача <br>
+        Банда Гоблинов
+      </div>
+      <div class="button-panel">
+        <button class="btn start-btn" onclick="start()">start</button>
+        <button class="btn stop-btn" onclick="stop()">stop</button>
+        <button class="btn kill-btn" onclick="kill()">kill switch</button>
+      </div>
 
-    <button onclick="start()">start</button>
-    <button onclick="stop()">stop</button>
-    <button onclick="kill()">killswitch</button>
+      <div style="display: flex; gap:12px; margin-bottom: 18px;">
+        <div style="flex:1; background: #f2f2f2; border-radius:15px; padding:12px; font-size:1em;">
+          <b>статус миссии:</b><br>
+          <span id="mission-status">действий не била</span>
+        </div>
+        <div style="flex:1; background: #f2f2f2; border-radius:15px; padding:12px; font-size:1em;">
+          <b>координаты дрона:</b> <br>
+          <span id="drone-x">x: 0</span> <br>
+          <span id="drone-y">y: 0</span> <br>
+          <span id="drone-z">z: 0</span>
+        </div>
+      </div>
 
-    <script src="{{ url_for('static', filename='socket.io.js') }}"></script>
-    <script>
-    const socket = io();
-    socket.on("connect", () => {
-        console.log("Connected to Socket.IO server");
-    });
+      <div class="found-vrez-block">
+        <b>найденные врезки:</b> <br>
+        <ul id="vrez-list"></ul>
+      </div>
+    </div>
+  </div>
 
-    socket.on("message", (data) => {
-        console.log("Received message:", data);
-    });
 
-    socket.emit("sendMessage", "Hello from the client!");
-    </script>
-    <script>
-        const start = () => {
-            console.log("start")
-            fetch("/api/start")
-        }
-        const stop = () => {
-            console.log("stop")
-            fetch("/api/stop")
-        }
-        const kill = () => {
-            console.log("kill")
-            fetch("/api/kill")
-        }
-    </script>
+  <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+
 </body>
 </html>
+
+
+
+
+
