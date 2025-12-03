@@ -15,7 +15,7 @@ shutil.copytree('./models/tube', simulationModels + 'tube')
 
 
 
-# ========= Обработка файла мира (world)=========
+# Обработка файла мира (world)
 try:
     # Чтение и анализ XML структуры мира
     environmentData = ET.parse(environmentFile)
@@ -31,7 +31,7 @@ try:
     markerSize = mapFile.read().split('\n')[1].split('\t')[1]
 except:
     # Сообщение об отсутствии карты маркеров
-    print('Карта маркеров не обнаружена! Запустите genmap.py, подробности: https://clover.coex.tech/en/aruco_map.html#marker-map-definition')
+    print('Нет карта маркеров! Используйте genmap.py, подробности: https://clover.coex.tech/en/aruco_map.html#marker-map-definition')
     exit()
 
 
@@ -40,7 +40,7 @@ except:
 
 
 
-# ========= Настройка параметров системы маркеров aruco.launch =========
+# Настройка параметров системы маркеров aruco.launch
 markerConfig = ET.parse(markerLaunch)
 markerRoot = markerConfig.getroot()
 
@@ -62,7 +62,7 @@ markerConfig.write(markerLaunch)
 
 
 
-# ========= Конфигурация основных параметров дрона clover.launch =========
+# Конфигурация основных параметров дрона clover.launch
 droneConfig = ET.parse(droneLaunch)
 droneRoot = droneConfig.getroot()
 
