@@ -3,38 +3,39 @@
 <head>
   <title>Банда Гоблинов</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+<!-- подключение CSS -->
 </head>
 
 
 
 <body>
   
-  <div class="main">
-    <div class="map-block" id="map">
-      <span class="corner-marker">0</span>
-      <div class="arrow-right"></div>
-      <div class="arrow-top"></div>
-      <div class="line-top"></div>
-      <div class="line-right"></div>
-      <div class="tube vertical"></div>
-      <div class="tube diagonal"></div>
+  <div class="main">       <!-- основной контейнер -->
+    <div class="map-block" id="map">              <!-- поле карты -->
+      <span class="corner-marker">0</span>    <!-- начало координат -->
+      <div class="arrow-right"></div>                  <!-- стрела для начала координат-->
+      <div class="arrow-top"></div>                    <!-- стрела для начала координат-->
+      <div class="line-top"></div>                       <!-- линия для начала координат-->
+      <div class="line-right"></div>                     <!-- линия для начала координат-->
+      <div class="tube vertical"></div>               <!-- вертикальная труба -->
+      <div class="tube diagonal"></div>             <!-- диагональная труба -->
     </div>
-    <div class="panel-block">
+    <div class="panel-block">                            <!-- панель справа -->
     <div style="padding: 15px;">
       <div style="background: #f2f2f2; border-radius: 25px; padding: 50px 0; font-size: 1.25em; font-weight: bold; text-align: center; margin-bottom:15px;">
         НТО ЛР командная задача <br>
-        Банда Гоблинов
+        Банда Гоблинов                                        <!-- заголовок -->
       </div>
       <div class="button-panel">
-        <button class="btn start-btn" onclick="start()">start</button>
-        <button class="btn stop-btn" onclick="stop()">stop</button>
-        <button class="btn kill-btn" onclick="kill()">kill switch</button>
+        <button class="btn start-btn" onclick="start()">start</button>            <!-- кнопка START -->
+        <button class="btn stop-btn" onclick="stop()">stop</button>             <!-- кнопка STOP -->
+        <button class="btn kill-btn" onclick="kill()">kill switch</button>          <!-- кнопка KILLSWITCH -->
       </div>
 
-      <div style="display: flex; gap:12px; margin-bottom: 18px;">
+      <div style="display: flex; gap:12px; margin-bottom: 18px;">                   <!-- статус и координаты -->
         <div style="flex:1; background: #f2f2f2; border-radius:15px; padding:12px; font-size:1em;">
           <b>статус миссии:</b><br>
-          <span id="mission-status">действий не била</span>
+          <span id="mission-status">действий не было</span>
         </div>
         <div style="flex:1; background: #f2f2f2; border-radius:15px; padding:12px; font-size:1em;">
           <b>координаты дрона:</b> <br>
@@ -44,7 +45,7 @@
         </div>
       </div>
 
-      <div class="found-vrez-block">
+      <div class="found-vrez-block">                                                                 <!-- найденные врезки -->
         <b>найденные врезки:</b> <br>
         <ul id="vrez-list"></ul>
       </div>
@@ -52,9 +53,8 @@
   </div>
 
 
-  <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/index.js') }}"></script>
-
+  <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>   <!-- socket.io -->
+  <script src="{{ url_for('static', filename='js/index.js') }}"></script>         
 </body>
 </html>
 
