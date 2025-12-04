@@ -11,9 +11,11 @@ markerData = '/home/clover/catkin_ws/src/clover/aruco_pose/map/'
 
 
 #Перенос моделей в необходимую папку
-shutil.copytree('./models/main_tube', simulationModels + 'main_tube')
-shutil.copytree('./models/tube', simulationModels + 'tube')
-
+try:
+    shutil.copytree('./models/main_tube', simulationModels + 'main_tube')
+    shutil.copytree('./models/tube', simulationModels + 'tube')
+except:
+    pass
 
 
 # Обработка файла мира (world)
