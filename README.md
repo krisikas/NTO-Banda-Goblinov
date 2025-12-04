@@ -259,9 +259,9 @@ python3 front/main.py
 
 3. Откройте браузер **внутри виртуальной машины** и перейдите по адресу:
 
-   ```text
-   http://localhost:5000/
-   ```
+```text
+http://localhost:5000/
+```
 
 
 <img src="./images/web_example.png" style="width:100%; height:auto;">
