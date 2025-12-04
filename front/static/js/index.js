@@ -1,9 +1,9 @@
-let drone_status = "stop"
-let drone_tubes = []
+let drone_status = "stop" // Текущий статус дрона
+let drone_tubes = [] // Массив сохранённых врезок
 
 
 
-// ээээээ хз зачем написал на JS мб чисто попробывать
+// ===== Генерация карты сетка 10x10 =====
 const map = document.getElementById('map');
 for (let y = 0; y < 10; y++) {
   const row = document.createElement('div');
@@ -20,7 +20,7 @@ for (let y = 0; y < 10; y++) {
 
 
 
-// книпки управления миссией 2 балла --------СЮДА и статус миссиииии
+//===== Функция управления дроном -- START =====
 function start() {
   if (drone_status != "stop" || drone_status == "end")
     return
@@ -32,6 +32,7 @@ function start() {
     });
 }
 
+//===== Функция управления дроном -- STOP =====
 function stop() {
   if (drone_status != "start" || drone_status == "end")
     return
@@ -43,6 +44,8 @@ function stop() {
     });
 }
 
+
+//===== Функция управления дроном -- KILLSWITCH =====
 function kill() {
   if (drone_status != "start" || drone_status == "end")
     return
@@ -60,7 +63,6 @@ function kill() {
 
 
 // ===== Socket =====
-
 const socket = io();
   
 socket.on("connect", () => {
@@ -79,7 +81,7 @@ socket.on("pos", (data) => {
 });
 
 socket.on("tubes", (data) => {
-  // data = массив (какая труба, координаты от начала )
+  // data = массив (какая труба, координаты от начала)
   console.log("Received tubes:", data);
   
   // Добавляем врезки в список
@@ -90,7 +92,7 @@ socket.on("tubes", (data) => {
 
 
 
-
+// ===== Обновление интерфейса по статусу дрона =====
 function updateStatus() {
   if (drone_status == "start") {
     document.querySelector('.start-btn').classList.add('active');
@@ -110,7 +112,7 @@ function updateStatus() {
     document.querySelector('.stop-btn').classList.add('active');
     document.getElementById('mission-status').textContent = 'аварийная остановка';
   }
-  else {
+  else {           // Конечное состояние (миссия выполнена)
     document.querySelector('.kill-btn').classList.add('active');
     document.querySelector('.start-btn').classList.add('active');
     document.querySelector('.stop-btn').classList.add('active');
@@ -120,7 +122,7 @@ function updateStatus() {
 
 
 
-// координаты дрона вроде 0 баллов
+// ===== Отображение координат дрона =====
 function updateDronePosition(x, y, z) {
   document.getElementById('drone-x').textContent = `x: ${y.toFixed(3)}`;
   document.getElementById('drone-y').textContent = `y: ${x.toFixed(3)}`;
@@ -129,7 +131,7 @@ function updateDronePosition(x, y, z) {
 
 
 
-// /
+// ===== Работа с найденными врезками =====
 function addVrez(tubes) {
   const list = document.getElementById('vrez-list');
 
@@ -144,7 +146,8 @@ function addVrez(tubes) {
     verzs.forEach(div => {
       div.remove();
     });
-    // console.log(vrezCount.cnt, tubes, tubes.length)
+   // console.log(vrezCount.cnt, tubes, tubes.length)
+   // Добавляем новые врезки и записи в список
     let cnt = 0
     tubes.forEach(tube => {
       drawVrez(tube.x, tube.y, tube.angle)
@@ -158,9 +161,11 @@ function addVrez(tubes) {
   }
 }
 
+
+// ===== Отрисовка врезок на карте =====
 function drawVrez (x, y, angle) {
-  const cx = 100*(x)
-  const cy = 100*(y+4)
+  const cx = 100*(x)                // Перевод координаты x в пиксели
+  const cy = 100*(y+4)           // Перевод координаты y в пиксели со сдвигом
   const bDeg = -angle * 180 / Math.PI
 
   const DVrez = document.createElement('div');
