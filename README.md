@@ -107,7 +107,7 @@ git clone https://github.com/krisikas/NTO-Banda-Goblinov.git
 Из папки `config` запустите файл конфигурации, который настраивает мир и параметры симуляции:
 
 ```bash
-cd ~/Desktop/NTO-Banda-Goblinov #Если ещё не находитесь в данной дериктории
+cd ~/Desktop/NTO-Banda-Goblinov
 python3 config/config.py
 ```
 
@@ -116,7 +116,7 @@ python3 config/config.py
 Из папки `config` запустите файл генерации конфигурацию трубопровода (основная труба + врезки):
 
 ```bash
-cd ~/Desktop/NTO-Banda-Goblinov #Если ещё не находитесь в данной дериктории
+cd ~/Desktop/NTO-Banda-Goblinov
 python3 config/gen_tubes.py
 ```
 
@@ -187,9 +187,10 @@ python3 config/gen_tubes.py
 3. Введите следующую команду:
 
 ```bash
-cd ~/Desktop/NTO-Banda-Goblinov #Если ещё не находитесь в данной дериктории
+cd ~/Desktop/NTO-Banda-Goblinov
 python3 drone/main.py
 ```
+После этого дрон будет ожидать команды старта от веб-интерфейса. Как его запустить далее.
 
 ---
 
@@ -253,7 +254,7 @@ HTML (Фронтенд) <=> REST API + WebSocket <=> Flask (Бэкенд) <=> RO
 2. Введите следующую команду:
 
 ```bash
-cd ~/Desktop/NTO-Banda-Goblinov #Если ещё не находитесь в данной дериктории
+cd ~/Desktop/NTO-Banda-Goblinov
 python3 front/main.py
 ```
 
