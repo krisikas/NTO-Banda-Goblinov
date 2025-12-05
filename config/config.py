@@ -11,9 +11,11 @@ markerData = '/home/clover/catkin_ws/src/clover/aruco_pose/map/'
 
 
 #Перенос моделей в необходимую папку
-
-shutil.copytree('./../models/main_tube', simulationModels + 'main_tube')
-shutil.copytree('./../models/tube', simulationModels + 'tube')
+try:
+    shutil.copytree('/home/clover/Desktop/NTO-Banda-Goblinov/models/main_tube/', simulationModels + 'main_tube')
+    shutil.copytree('/home/clover/Desktop/NTO-Banda-Goblinov/models/tube', simulationModels + 'tube')
+except:
+    print("Models already exist, it's ok")
 
 
 
@@ -34,7 +36,7 @@ try:
     markerSize = mapFile.read().split('\n')[1].split('\t')[1]
 except:
     # Сообщение об отсутствии карты маркеров
-    print('Нет карта маркеров! Используйте genmap.py, подробности: https://clover.coex.tech/en/aruco_map.html#marker-map-definition')
+    print('No aruco map! Use genmap.py, more info: https://clover.coex.tech/en/aruco_map.html#marker-map-definition')
     exit()
 
 
@@ -78,3 +80,5 @@ for index in range(len(droneConfig.findall('arg'))):
 
 # Запись изменений в файл конфигурации
 droneConfig.write(droneLaunch)
+
+print('End config successfully')
