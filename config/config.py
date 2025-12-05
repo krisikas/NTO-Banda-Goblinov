@@ -14,8 +14,9 @@ markerData = '/home/clover/catkin_ws/src/clover/aruco_pose/map/'
 try:
     shutil.copytree('../models/main_tube', simulationModels + 'main_tube')
     shutil.copytree('../models/tube', simulationModels + 'tube')
+    print("брат все ок")
 except:
-    pass
+    print("лее брат капец")
 
 
 # Обработка файла мира (world)
